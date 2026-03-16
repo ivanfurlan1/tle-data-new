@@ -1,0 +1,29 @@
+name: Update Launches
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Descargar próximos lanzamientos
+        run: |
+          curl -L "https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=20" -o launches/next-launches.json
+
+      - name: Commit cambios
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add launches/*.json
+          git commit -m "update launch data" || echo "sin cambios"
+          git push
