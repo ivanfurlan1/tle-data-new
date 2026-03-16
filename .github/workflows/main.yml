@@ -19,7 +19,6 @@ jobs:
       - name: Descargar datos de CelesTrak
         run: |
           curl -L "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle" -o tle/active.txt
-          curl -L "https://celestrak.org/NORAD/elements/gp.php?GROUP=last-30-days&FORMAT=tle" -o tle/last30.txt
           curl -L "https://celestrak.org/NORAD/elements/supplemental/sup-gp.php?FILE=starlink&FORMAT=tle" -o tle/starlink-supplemental.txt
 
       - name: Commit cambios
