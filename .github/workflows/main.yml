@@ -1,0 +1,27 @@
+name: Update TLE
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repo
+        uses: actions/checkout@v3
+
+      - name: Descargar datos de CelesTrak
+        run: |
+          curl -L "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle" -o tle/active.txt
+          curl -L "https://celestrak.org/NORAD/elements/gp.php?GROUP=last-30-days&FORMAT=tle" -o tle/last30.txt
+
+      - name: Commit cambios
+        run: |
+          git config --global user.name "tle-bot"
+          git config --global user.email "bot@example.com"
+          git add tle/*.txt
+          git commit -m "update tle data" || echo "sin cambios"
+          git push
