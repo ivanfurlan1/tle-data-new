@@ -27,4 +27,4 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add launches/*.json
           git commit -m "update launch data" || echo "sin cambios"
-          git push
+          git push 
