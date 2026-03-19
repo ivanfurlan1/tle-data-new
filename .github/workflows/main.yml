@@ -16,16 +16,22 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Crear carpeta
+        run: mkdir -p tle
+
       - name: Descargar datos de CelesTrak
         run: |
-          curl -L "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle" -o tle/active.txt
-          curl -L "https://celestrak.org/NORAD/elements/supplemental/sup-gp.php?FILE=starlink&FORMAT=tle" -o tle/starlink-supplemental.txt
-          curl -L "https://celestrak.org/NORAD/elements/gp.php?GROUP=visual&FORMAT=tle" -o tle/visual.txt
+          curl -f -L "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle" -o tle/active.txt
+          curl -f -L "https://celestrak.org/NORAD/elements/supplemental/sup-gp.php?FILE=starlink&FORMAT=tle" -o tle/starlink-supplemental.txt
+          curl -f -L "https://celestrak.org/NORAD/elements/gp.php?GROUP=visual&FORMAT=tle" -o tle/visual.txt
 
       - name: Commit cambios
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
+
           git add tle/*.txt
           git commit -m "update tle data" || echo "sin cambios"
+
+          git pull --rebase origin main
           git push
